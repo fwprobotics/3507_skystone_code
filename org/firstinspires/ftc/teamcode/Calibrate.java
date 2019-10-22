@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name="Calibrate", group="chad")
+@Autonomous(name="Calibrate Chad", group="chad")
 public class Calibrate extends LinearOpMode {
     //
     DcMotor frontleft;
@@ -30,7 +30,7 @@ public class Calibrate extends LinearOpMode {
         frontleft.setDirection(DcMotorSimple.Direction.REVERSE);//If your robot goes backward, switch this from right to left
         backleft.setDirection(DcMotorSimple.Direction.REVERSE);//If your robot goes backward, switch this from right to left
         //
-        waitForStart();
+        waitForStartify();
         //
         moveToPosition(20, .2);//Don't change this line, unless you want to calibrate with different speeds
         //
@@ -109,5 +109,12 @@ public class Calibrate extends LinearOpMode {
             backright.setPower(0);
         }
         return;
+    }
+    /*
+    A tradition within the Thunder Pengwins code, we always start programs with waitForStartify,
+    our way of adding personality to our programs.
+     */
+    public void waitForStartify() {
+        waitForStart();
     }
 }

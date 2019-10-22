@@ -60,7 +60,7 @@ public class MecanumDrive_Java extends LinearOpMode {
     telemetry.addData("Arm Pot Value", armPot.getVoltage());
     // Servos
     leftFoundationServo.setPosition(1);
-    rightFoundationServo.setPosition(1);
+    rightFoundationServo.setPosition(0);
     
     telemetry.update();
     waitForStart();
@@ -170,13 +170,13 @@ public class MecanumDrive_Java extends LinearOpMode {
   private void foundationHooks() {
     if (gamepad1.a && hookPos.equals("down") && !aButtonDown2) {
       leftFoundationServo.setPosition(1);
-      rightFoundationServo.setPosition(0.4);
+      rightFoundationServo.setPosition(0);
       aButtonDown2 = true;
       hookPos = "up";
       sleep (100);
     } else if (gamepad1.a && hookPos.equals("up") && !aButtonDown2) {
-      leftFoundationServo.setPosition(0.3);
-      rightFoundationServo.setPosition(0);
+      leftFoundationServo.setPosition(0);
+      rightFoundationServo.setPosition(1);
       hookPos = "down";
       aButtonDown2 = true;
       sleep(100);
