@@ -48,13 +48,14 @@ public class BlueAuton extends LinearOpMode {
     Acceleration gravity;
     //
     public void runOpMode(){
-        //
         initGyro();
-        //
+
         frontleft = hardwareMap.dcMotor.get("frontLeftDrive");
         frontright = hardwareMap.dcMotor.get("frontRightDrive");
         backleft = hardwareMap.dcMotor.get("backLeftDrive");
         backright = hardwareMap.dcMotor.get("backRightDrive");
+        frontleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backleft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
         clawServo = hardwareMap.servo.get("clawServo");
@@ -62,9 +63,6 @@ public class BlueAuton extends LinearOpMode {
         rightFoundationServo = hardwareMap.servo.get("rightFoundationServo");
         armPot = hardwareMap.analogInput.get("armPot");
         armMotor = hardwareMap.dcMotor.get("armMotor");
-
-        frontleft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backleft.setDirection(DcMotorSimple.Direction.REVERSE);
         
         Double position = 2.2;//0: left, 1: middle, 2.2: right
         Double stoneOffset = position * 8.0;
@@ -77,10 +75,14 @@ public class BlueAuton extends LinearOpMode {
         waitForStart();
         //
     
+    // ---------
+    //  DRIVING
+    // ---------
+
     armMotor.setPower(-0.2);
     clawServo.setPosition(0.6);
     strafeToPosition(-12.8+stoneOffset, 0.3); // Strafe to grab skytone
-    
+    //
     armMotor.setPower(0);
     //
     moveToPosition(26.2, 0.4); // Drive up to blocks
@@ -99,19 +101,17 @@ public class BlueAuton extends LinearOpMode {
     sleep(500);
     liftMotor.setPower(0);
     liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    
     //
     turnWithGyro(90, 0.25); // Turn to face foundation
-    //
     moveToPosition(10, 0.2); // Drive up to foundation
-    
+    //
     liftMotor.setPower(-.5);
     sleep(250);
     liftMotor.setPower(0);
-    
+    //
     clawServo.setPosition(.6);
     sleep(500);
-    
+    //
     liftMotor.setPower(.75);
     sleep(500);
     liftMotor.setPower(0);
@@ -119,31 +119,31 @@ public class BlueAuton extends LinearOpMode {
     leftFoundationServo.setPosition(0);
     rightFoundationServo.setPosition(1);
     sleep(1000);
-    
+    //
     liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     //
-    
     moveToPosition(-24, 0.4); // back up 
-    
+    //
     turnWithGyro(90, -0.4);
-    
+    //
     moveToPosition(6, 0.4);
-    
+    // 
     leftFoundationServo.setPosition(1);
     rightFoundationServo.setPosition(0);
     sleep(250);
-    
-    
+    //
     strafeToPosition(-18, 0.5);
-    
+    //
     moveToPosition(-5, 0.5);
     strafeToPosition(29, 0.5);
-    
+    //
     moveToPosition(-30, 0.5); 
     }
 
+    // -----------
+    //  FUNCTIONS
+    // -----------
 
-    //
     /*
     This function's purpose is simply to drive forward or backward.
     To drive backward, simply make the inches input negative.
@@ -203,7 +203,6 @@ public class BlueAuton extends LinearOpMode {
         //</editor-fold>
         //
         if (speedDirection > 0){//set target positions
-            //<editor-fold desc="turn right">
             if (degrees > 10){
                 first = (degrees - 10) + devertify(yaw);
                 second = degrees + devertify(yaw);
@@ -211,9 +210,7 @@ public class BlueAuton extends LinearOpMode {
                 first = devertify(yaw);
                 second = degrees + devertify(yaw);
             }
-            //</editor-fold>
         }else{
-            //<editor-fold desc="turn left">
             if (degrees > 10){
                 first = devertify(-(degrees - 10) + devertify(yaw));
                 second = devertify(-degrees + devertify(yaw));
@@ -221,8 +218,7 @@ public class BlueAuton extends LinearOpMode {
                 first = devertify(yaw);
                 second = devertify(-degrees + devertify(yaw));
             }
-            //
-            //</editor-fold>
+
         }
         //
         //<editor-fold desc="Go to position">
@@ -283,7 +279,6 @@ public class BlueAuton extends LinearOpMode {
             backleft.setPower(0);
             backright.setPower(0);
         }
-        //</editor-fold>
         //
         frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -325,12 +320,7 @@ public class BlueAuton extends LinearOpMode {
         backleft.setPower(0);
         return;
     }
-    //
-    /*
-    A tradition within the Thunder Pengwins code, we always start programs with waitForStartify,
-    our way of adding personality to our programs.
-     */
-    //
+
     /*
     These functions are used in the turnWithGyro function to ensure inputs
     are interpreted properly.
