@@ -10,6 +10,7 @@
 // import org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone;
 
 // @TeleOp(name = "test (Blocks to Java)", group = "")
+@Disabled
 // public class test extends LinearOpMode {
 
 //   private VuforiaSkyStone vuforiaSkyStone;

@@ -57,12 +57,14 @@ public class BlueAuton extends LinearOpMode {
         frontleft.setDirection(DcMotorSimple.Direction.REVERSE);
         backleft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
         liftMotor = hardwareMap.dcMotor.get("liftMotor");
         clawServo = hardwareMap.servo.get("clawServo");
         leftFoundationServo = hardwareMap.servo.get("leftFoundationServo");
         rightFoundationServo = hardwareMap.servo.get("rightFoundationServo");
         armPot = hardwareMap.analogInput.get("armPot");
         armMotor = hardwareMap.dcMotor.get("armMotor");
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
         Double position = 2.2;//0: left, 1: middle, 2.2: right
         Double stoneOffset = position * 8.0;
@@ -96,45 +98,46 @@ public class BlueAuton extends LinearOpMode {
     turnWithGyro(90, -0.2); // Turn to go under skybridge
     strafeToPosition(8,.4);
     //
-    moveToPosition(66.5+stoneOffset, 0.4); // Drive under skybridge
-    liftMotor.setPower(.75);
+    moveToPosition(66.5+stoneOffset, 0.8); // Drive under skybridge
+    //
+    liftMotor.setPower(.75); // Raise up lift to place skystone
     sleep(500);
     liftMotor.setPower(0);
-    liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     //
-    turnWithGyro(90, 0.25); // Turn to face foundation
-    moveToPosition(10, 0.2); // Drive up to foundation
+    turnWithGyro(90, 0.3); // Turn to face foundation
+    moveToPosition(10, 0.5); // Drive up to foundation
     //
-    liftMotor.setPower(-.5);
+    liftMotor.setPower(-.5); // Lower lift to place skystone
     sleep(250);
     liftMotor.setPower(0);
     //
-    clawServo.setPosition(.6);
-    sleep(500);
+    clawServo.setPosition(.6); // Open claw
+    sleep(300);
     //
-    liftMotor.setPower(.75);
+    liftMotor.setPower(.75); // Raise lift back up
     sleep(500);
     liftMotor.setPower(0);
     //
-    leftFoundationServo.setPosition(0);
+    leftFoundationServo.setPosition(0); // Engage foundation hooks
     rightFoundationServo.setPosition(1);
-    sleep(1000);
+    sleep(500);
     //
-    liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    moveToPosition(-24, 0.4); // back up
     //
-    moveToPosition(-24, 0.4); // back up 
+    liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // allow the lift to go back down
     //
-    turnWithGyro(90, -0.4);
+    turnWithGyro(90, -0.3); // turn to face wall
     //
-    moveToPosition(6, 0.4);
+    moveToPosition(6, 0.4); // ram foundation into wall
     // 
-    leftFoundationServo.setPosition(1);
+    leftFoundationServo.setPosition(1); // Release foundation hooks
     rightFoundationServo.setPosition(0);
     sleep(250);
     //
-    strafeToPosition(-18, 0.5);
+    strafeToPosition(-18, 0.5); // Slide away
     //
-    moveToPosition(-5, 0.5);
+    moveToPosition(-5, 0.5); // Back up
     strafeToPosition(29, 0.5);
     //
     moveToPosition(-30, 0.5); 

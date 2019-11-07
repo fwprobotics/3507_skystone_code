@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -57,18 +59,11 @@ public class TensorFlowSample extends LinearOpMode {
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
+    DcMotor frontleft;
+    DcMotor frontright;
+    DcMotor backleft;
+    DcMotor backright;
+
     private static final String VUFORIA_KEY =
             "ATSzQNn/////AAABme6Xpu9G9EdMjjISPu05gcUAsqjZAxN5KKJj94qk7bDsUfbEnMZxTlzAyu9EYXnCdaG6atZnVqCxE+URlB6FdtHSMEHu3wGsob5p4QoEjty0DvEm17RpdEHGArJy+aySwhTtCguOhlJOLJW8NYWRN6wj0Dba7mxarURTcs83zlSB+hbr3PeQjvFVNWgF8LoZrZ1Z+9oyR0SKVMHgteyhjfTTGoTw6shFzEWwiSJFi5wJjZHdemjzODaL0G32ZfupdSOcMyLXXOVbeaobC78qZUFtKTFQ+Jp0fboDhFthRBvTrsORw0mPdq44kT8dZ9d8aX/coOSSrIDBTh4sM6CLZ3XlWMW8y3zx2BlvC0JogdRF";
 
@@ -88,6 +83,15 @@ public class TensorFlowSample extends LinearOpMode {
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
+
+        frontleft = hardwareMap.dcMotor.get("frontLeftDrive");
+        frontright = hardwareMap.dcMotor.get("frontRightDrive");
+        backleft = hardwareMap.dcMotor.get("backLeftDrive");
+        backright = hardwareMap.dcMotor.get("backRightDrive");
+        frontleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backleft.setDirection(DcMotorSimple.Direction.REVERSE);
+        
+        
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -163,7 +167,7 @@ public class TensorFlowSample extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.8;
+        tfodParameters.minimumConfidence = 0.4;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
