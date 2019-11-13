@@ -68,8 +68,9 @@ public class MecanumDrive_Java extends LinearOpMode {
       // Put run blocks here.
       while (opModeIsActive()) {
         LeftX = -gamepad1.left_stick_x;
-        LeftX = (LeftX / 1.07) * (0.62 * (LeftX * LeftX) + 0.45);
+        //LeftX = (LeftX / 1.07) * (0.62 * (LeftX * LeftX) + 0.45);
         LeftY = -gamepad1.left_stick_y;
+        LeftY = (LeftY / 1.07) * (0.62 * (LeftY * LeftY) + 0.45);;
         RightX = -gamepad1.right_stick_x;
         
         driving();
@@ -98,18 +99,18 @@ public class MecanumDrive_Java extends LinearOpMode {
    * This function opens and closes the claw on the arm.
    */
   private void clawControl() {
-    if (gamepad2.a && clawPos.equals("closed") && !aButtonDown) {
+    if (gamepad2.a && clawPos.equals("closed") && !aButtonDown) { // Opening
       clawServo.setPosition(0.6);
       aButtonDown = true;
       clawPos = "open";
       sleep (100);
-    } else if (gamepad2.a && clawPos.equals("open") && !aButtonDown) {
+    } else if (gamepad2.a && clawPos.equals("open") && !aButtonDown) { // Closing
       clawServo.setPosition(1);
       clawPos = "closed";
       aButtonDown = true;
       sleep(100);
     }
-    if (!gamepad2.a) {
+    if (!gamepad2.a) { 
       aButtonDown = false;
     }
   }
@@ -120,7 +121,6 @@ public class MecanumDrive_Java extends LinearOpMode {
    * where it should be the motor is powered in a while loop until it gets there.
    * The motor is then turned off.
    */
-  
   private void armControl() {
     if (gamepad2.x) {
       armPos = "down";
@@ -153,20 +153,6 @@ public class MecanumDrive_Java extends LinearOpMode {
     }
   }
 
-  
-  // private void armControl() {
-  //   // going down
-  //   //&& armPot.getVoltage() >= bottomArmPosPot - potMargin
-  //   if (gamepad2.x) {
-  //     armMotor.setPower(1);
-  //   // going up
-  //   } else if (gamepad2.y) {
-  //     armMotor.setPower(-1);
-  //   } else {
-  //     armMotor.setPower(0);
-  //   }
-  // }
-  
   private void foundationHooks() {
     if (gamepad1.a && hookPos.equals("down") && !aButtonDown2) {
       leftFoundationServo.setPosition(1);
