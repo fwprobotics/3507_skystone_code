@@ -66,7 +66,7 @@ public class BlueAuton extends LinearOpMode {
         armMotor = hardwareMap.dcMotor.get("armMotor");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         
-        Double position = 2.2;//0: left, 1: middle, 2.2: right
+        Double position = 2.3;//0: left, 1: middle, 2.2: right
         Double stoneOffset = position * 8.0;
         
         //
@@ -98,7 +98,7 @@ public class BlueAuton extends LinearOpMode {
     turnWithGyro(90, -0.2); // Turn to go under skybridge
     strafeToPosition(8,.4);
     //
-    moveToPosition(66.5+stoneOffset, 0.8); // Drive under skybridge
+    moveToPosition(60.5+stoneOffset, 0.8); // Drive under skybridge
     //
     liftMotor.setPower(.75); // Raise up lift to place skystone
     sleep(500);
@@ -135,7 +135,7 @@ public class BlueAuton extends LinearOpMode {
     rightFoundationServo.setPosition(0);
     sleep(250);
     //
-    strafeToPosition(-18, 0.5); // Slide away
+    strafeToPosition(-25, 0.5); // Slide away
     //
     moveToPosition(-5, 0.5); // Back up
     strafeToPosition(29, 0.5);
