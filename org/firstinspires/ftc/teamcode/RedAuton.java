@@ -37,11 +37,10 @@ public class RedAuton extends LinearOpMode {
     Double diameter = 4.125;
     Double cpi = (cpr * gearratio)/(Math.PI * diameter); //counts per inch, 28cpr * gear ratio / (2 * pi * diameter (in inches, in the center))
     Double bias = 0.515;//default 0.8
-    Double meccyBias = 0.515;//change to adjust only strafing movement - orig 0.9
+    Double meccyBias = 0.495;//change to adjust only strafing movement - orig 0.9, then 0.515
     //
     Double conversion = cpi * bias;
     Boolean exit = false;
-
     //
     BNO055IMU imu;
     Orientation angles;
@@ -65,29 +64,28 @@ public class RedAuton extends LinearOpMode {
         armPot = hardwareMap.analogInput.get("armPot");
         armMotor = hardwareMap.dcMotor.get("armMotor");
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        
+
         Double position = 2.2;//0: left, 1: middle, 2.2: right
         Double stoneOffset = position * 8.0;
-        
+
         //
-        clawServo.setPosition(1);
-        leftFoundationServo.setPosition(1);
-        rightFoundationServo.setPosition(0);
+
+        leftFoundationServo.setPosition(0.3); // before 0
+        rightFoundationServo.setPosition(0.5); // before 1
 
         waitForStart();
-        //
-    
+
     // ---------
     //  DRIVING
     // ---------
 
-    armMotor.setPower(-0.2);
     clawServo.setPosition(0.6);
-    strafeToPosition(-(-12.8+stoneOffset), 0.3); // Strafe to grab skytone
+    strafeToPosition(-(-12+stoneOffset), 0.3); // Strafe to grab skytone
     //
-    armMotor.setPower(0);
-    //
-    moveToPosition(26.2, 0.4); // Drive up to blocks
+    // add move and check for skystone vuforia here
+    moveToPosition(13.1, 0.4); // Drive up to blocks, pausing halfway to drop arm down
+    sleep(220);
+    moveToPosition(13.1, 0.3);
     //
     clawServo.setPosition(1);
     sleep(500);
@@ -95,18 +93,26 @@ public class RedAuton extends LinearOpMode {
     moveToPosition(-8.5, 0.3); // Back up
     sleep(100);
     //
+    liftMotor.setPower(.75); // Raise lift back up
+    sleep(500);
+    liftMotor.setPower(0);
+    //
     turnWithGyro(92, 0.15); // Turn to go under skybridge
     strafeToPosition(-6,.4);
     //
-    moveToPosition(64.5+stoneOffset, 0.8); // Drive under skybridge // before 56.5
+    liftMotor.setPower(-.5); // Lower lift
+    sleep(600);
+    liftMotor.setPower(0);
+    //
+    moveToPosition(64.5+stoneOffset, 0.75); // Drive under skybridge // before 56.5
     //
     liftMotor.setPower(.75); // Raise up lift to place skystone
     sleep(500);
     liftMotor.setPower(0);
-
     //
     turnWithGyro(91, -0.3); // Turn to face foundation
-    moveToPosition(10, 0.5); // Drive up to foundation
+    //
+    moveToPosition(8.5, 0.35); // Drive up to foundation
     //
     liftMotor.setPower(-.5); // Lower lift to place skystone
     sleep(250);
@@ -119,28 +125,39 @@ public class RedAuton extends LinearOpMode {
     sleep(500);
     liftMotor.setPower(0);
     //
-    leftFoundationServo.setPosition(0); // Engage foundation hooks
-    rightFoundationServo.setPosition(1);
+    moveToPosition(1.3, 0.2); // Final sneak-up on the foundation
+    //
+    leftFoundationServo.setPosition(1); // Engage foundation hooks
+    rightFoundationServo.setPosition(0);
     sleep(500);
     //
-    moveToPosition(-30, 0.4); // back up // before -24
+    moveToPosition(-30, 0.4); // Back up with foundation
     //
     liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // allow the lift to go back down
     //
     turnWithGyro(92, 0.3); // turn to face wall
     //
+    sleep(200);
+    //
+    leftFoundationServo.setPosition(0.3); // Release foundation hooks
+    rightFoundationServo.setPosition(0.5);
+    //
     moveToPosition(6, 0.4); // ram foundation into wall
-    // 
-    leftFoundationServo.setPosition(1); // Release foundation hooks
-    rightFoundationServo.setPosition(0);
-    sleep(250);
+    sleep(350);
     //
-    strafeToPosition(28, 0.5); // Slide away
+    moveToPosition(-4, 0.4);
     //
-    moveToPosition(-5, 0.5); // Back up
-    strafeToPosition(-33, 0.5);
+    strafeToPosition(30, 0.5); // Slide away
     //
-    moveToPosition(-29, 0.5); 
+    moveToPosition(-4, 0.5);
+    //
+    liftMotor.setPower(-.5); // Lower lift
+    sleep(900);
+    liftMotor.setPower(0);
+    //
+    strafeToPosition(-30, 0.5);
+    //
+    moveToPosition(-26, 0.5);
     }
 
     // -----------

@@ -24,15 +24,14 @@ public class MecanumDrive_Java extends LinearOpMode {
   double LeftY;
   double RightX;
   double LeftX;
-  double bottomArmPosPot = 3.3;
-  double topArmPosPot = 1.4;
-  double potMargin = 0.1;
+  //double bottomArmPosPot = 3.3;
+  //double topArmPosPot = 1.4;
+  //double potMargin = 0.1;
   boolean aButtonDown;
   boolean aButtonDown2;
-  String clawPos = "closed";
-  String armPos = "down";
+  String clawPos = "open";
+  //String armPos = "down";
   String hookPos = "up";
-
 
   @Override
   public void runOpMode() {
@@ -45,10 +44,9 @@ public class MecanumDrive_Java extends LinearOpMode {
     clawServo = hardwareMap.servo.get("clawServo");
     leftFoundationServo = hardwareMap.servo.get("leftFoundationServo");
     rightFoundationServo = hardwareMap.servo.get("rightFoundationServo");
-    armPot = hardwareMap.analogInput.get("armPot");
-    armMotor = hardwareMap.dcMotor.get("armMotor");
+    //armPot = hardwareMap.analogInput.get("armPot");
+    //armMotor = hardwareMap.dcMotor.get("armMotor");
 
-    // Put initialization blocks here.
     backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -57,29 +55,30 @@ public class MecanumDrive_Java extends LinearOpMode {
     liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
     backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-    telemetry.addData("Arm Pot Value", armPot.getVoltage());
+
     // Servos
-    leftFoundationServo.setPosition(1);
-    rightFoundationServo.setPosition(0);
-    
+    leftFoundationServo.setPosition(0.3);
+    rightFoundationServo.setPosition(0.5);
+    clawServo.setPosition(.6); // Where it ends in autonomous
+
     telemetry.update();
     waitForStart();
     if (opModeIsActive()) {
-      // Put run blocks here.
+
       while (opModeIsActive()) {
         LeftX = -gamepad1.left_stick_x;
         //LeftX = (LeftX / 1.07) * (0.62 * (LeftX * LeftX) + 0.45);
-        LeftY = -gamepad1.left_stick_y;
+        LeftY = -gamepad1.left_stick_y * 0.9;
         LeftY = (LeftY / 1.07) * (0.62 * (LeftY * LeftY) + 0.45);;
-        RightX = -gamepad1.right_stick_x;
-        
+        RightX = -gamepad1.right_stick_x * 0.45;
+
         driving();
         armControl();
         clawControl();
         foundationHooks();
-        
+
         liftMotor.setPower(gamepad2.right_stick_y);
-        
+
         telemetry();
       }
     }
@@ -94,7 +93,7 @@ public class MecanumDrive_Java extends LinearOpMode {
     backLeftDrive.setPower((LeftY - RightX) + LeftX);
     backRightDrive.setPower((LeftY + RightX) - LeftX);
   }
-  
+
   /**
    * This function opens and closes the claw on the arm.
    */
@@ -110,7 +109,7 @@ public class MecanumDrive_Java extends LinearOpMode {
       aButtonDown = true;
       sleep(100);
     }
-    if (!gamepad2.a) { 
+    if (!gamepad2.a) {
       aButtonDown = false;
     }
   }
@@ -121,48 +120,48 @@ public class MecanumDrive_Java extends LinearOpMode {
    * where it should be the motor is powered in a while loop until it gets there.
    * The motor is then turned off.
    */
-  private void armControl() {
-    if (gamepad2.x) {
-      armPos = "down";
-    } 
-    
-    else if (gamepad2.y) {
-      armPos = "up";
-    }
-    
-    // Bringing the arm up
-    if (armPos == "up" && armPot.getVoltage() >= topArmPosPot + potMargin) {
-      armMotor.setPower(0.7);
-      
-      // if (clawPos == "closed") {
-      //   armMotor.setPower(-0.8);
-      // }
-      
-      // else if (clawPos == "open") {
-      //   armMotor.setPower(-0.3);
-      // }
-    }
-    
-    // Bringing the arm down
-    else if (armPos == "down" && armPot.getVoltage() <= bottomArmPosPot - potMargin) {
-      armMotor.setPower(-0.2);
-    }
-
-    else {
-      armMotor.setPower(0);
-    }
-  }
+  // private void armControl() {
+  //   if (gamepad2.x) {
+  //     armPos = "down";
+  //   }
+  //
+  //   else if (gamepad2.y) {
+  //     armPos = "up";
+  //   }
+  //
+  //   // Bringing the arm up
+  //   if (armPos == "up" && armPot.getVoltage() >= topArmPosPot + potMargin) {
+  //     armMotor.setPower(0.7);
+  //
+  //     // if (clawPos == "closed") {
+  //     //   armMotor.setPower(-0.8);
+  //     // }
+  //
+  //     // else if (clawPos == "open") {
+  //     //   armMotor.setPower(-0.3);
+  //     // }
+  //   }
+  //
+  //   // Bringing the arm down
+  //   else if (armPos == "down" && armPot.getVoltage() <= bottomArmPosPot - potMargin) {
+  //     armMotor.setPower(-0.2);
+  //   }
+  //
+  //   else {
+  //     armMotor.setPower(0);
+  //   }
+  // }
 
   private void foundationHooks() {
-    if (gamepad1.a && hookPos.equals("down") && !aButtonDown2) {
-      leftFoundationServo.setPosition(1);
-      rightFoundationServo.setPosition(0);
+    if (gamepad1.a && hookPos.equals("down") && !aButtonDown2) { // Opening hooks
+      leftFoundationServo.setPosition(0.3);
+      rightFoundationServo.setPosition(0.5);
       aButtonDown2 = true;
       hookPos = "up";
       sleep (100);
-    } else if (gamepad1.a && hookPos.equals("up") && !aButtonDown2) {
-      leftFoundationServo.setPosition(0);
-      rightFoundationServo.setPosition(1);
+  } else if (gamepad1.a && hookPos.equals("up") && !aButtonDown2) { // Closing hooks
+      leftFoundationServo.setPosition(1);
+      rightFoundationServo.setPosition(0);
       hookPos = "down";
       aButtonDown2 = true;
       sleep(100);
@@ -171,11 +170,10 @@ public class MecanumDrive_Java extends LinearOpMode {
       aButtonDown2 = false;
     }
   }
-  
-  
+
+
   private void telemetry() {
     telemetry.addData("A button down?", aButtonDown);
-    telemetry.addData("Arm Pot Value", armPot.getVoltage());
     telemetry.addData("Lift Power", liftMotor.getPower());
     telemetry.addData("Lift Encoder Value", liftMotor.getCurrentPosition());
     telemetry.addData("LeftStickX", LeftX);
