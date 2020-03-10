@@ -1,2 +1,2 @@
 # 3507_skystone_code
-Code for FTC team 3507 Robotheosis for the 2019-20 Skystone season. Feel free to take inspiration for your own robots and code.
+Code used for League Meets #1 & #2 for FTC Team 3507's Skystone season. Replaced by Android Studio build of app. 
